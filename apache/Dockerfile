@@ -23,6 +23,7 @@ RUN curl -L -o dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.
                            soap \
                            xsl \
                            zip \
+                           mbstring \
  && a2enmod rewrite headers \
  && a2ensite magento.conf \
   # Idiopathic rm failure; loop is workaround
