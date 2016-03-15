@@ -5,7 +5,8 @@ COPY xdebug-enabler.ini /etc/php5/mods-available/
 COPY start_safe_perms /usr/local/bin/
 RUN curl -L -o dumb-init https://github.com/Yelp/dumb-init/releases/download/v1.0.1/dumb-init_1.0.1_amd64 \
  && mv dumb-init /usr/local/bin/dumb-init \
- && chmod +x /usr/local/bin/dumb-initapt-get -qqy update \
+ && chmod +x /usr/local/bin/dumb-init \
+ && apt-get -qqy update \
  && apt-get -qqy install git \
                          libcurl4-gnutls-dev \
                          libmcrypt-dev \
