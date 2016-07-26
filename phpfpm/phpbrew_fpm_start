@@ -1,0 +1,5 @@
+#!/bin/bash
+source ~/.phpbrew/bashrc
+
+phpbrew use $MAGENTO_PHP_BREWED_VERSION \
+ && exec /root/.phpbrew/php/php-$MAGENTO_PHP_BREWED_VERSION/sbin/php-fpm
