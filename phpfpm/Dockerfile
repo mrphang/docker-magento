@@ -33,6 +33,7 @@ RUN chmod +x /usr/local/bin/phpbrew_fpm_start \
                                                 +mysql \
                                                 +iconv \
                                                 +fpm \
+                                                +soap \
                                                 -- \
                                                 --with-jpeg-dir=/usr/include/
 COPY phpbrew_install_extensions /usr/local/bin/
