@@ -12,7 +12,7 @@ db:
     volumes_from:
         - data
 php:
-    image: kojiromike/magento_php
+    image: mrphang/magento_phpbrewfpm
     links:
         - db
     volumes_from:
