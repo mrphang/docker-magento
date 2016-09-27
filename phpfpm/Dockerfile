@@ -39,5 +39,6 @@ RUN chmod +x /usr/local/bin/phpbrew_fpm_start \
 COPY phpbrew_install_extensions /usr/local/bin/
 RUN chmod +x /usr/local/bin/phpbrew_install_extensions \
  && bash phpbrew_install_extensions
+COPY xdebug-enabler.ini /root/.phpbrew/php/php-$MAGENTO_PHP_BREWED_VERSION/var/db/xdebugenabler.ini
 CMD ["/usr/local/bin/phpbrew_fpm_start"]
 EXPOSE 9001

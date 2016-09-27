@@ -15,6 +15,8 @@ php:
     image: mrphang/magento_phpbrewfpm
     links:
         - db
+    volumes:
+        - "/root/.phpbrew"
     volumes_from:
         - data
     ports:
@@ -24,15 +26,24 @@ web:
     links:
         - php
     ports:
-        - "80"
+        - "80:80"
     volumes_from:
         - data
-fs:
-    image: kojiromike/magento_fs
+# fs:
+#     image: kojiromike/magento_fs
+#     volumes_from:
+#         - data
+#     ports:
+#         - "137:137"
+#         - "138:138"
+#         - "139:139"
+#         - "445:445"
+ssh:
+    image: mrphang/magento_sshd
     volumes_from:
         - data
+        - php
+    links:
+        - db
     ports:
-        - "137:137"
-        - "138:138"
-        - "139:139"
-        - "445:445"
+        - "2222:22"
