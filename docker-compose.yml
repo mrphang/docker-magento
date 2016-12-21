@@ -16,7 +16,7 @@ php:
     links:
         - db
     volumes:
-        - "/root/.phpbrew"
+        - "/opt/phpbrew"
     volumes_from:
         - data
     ports:
@@ -29,15 +29,6 @@ web:
         - "80:80"
     volumes_from:
         - data
-# fs:
-#     image: kojiromike/magento_fs
-#     volumes_from:
-#         - data
-#     ports:
-#         - "137:137"
-#         - "138:138"
-#         - "139:139"
-#         - "445:445"
 ssh:
     image: mrphang/magento_sshd
     volumes_from:

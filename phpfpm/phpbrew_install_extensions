@@ -1,5 +1,5 @@
 #!/bin/bash
-source ~/.phpbrew/bashrc
+source /opt/phpbrew/bashrc
 
 phpbrew use $MAGENTO_PHP_BREWED_VERSION \
  && phpbrew ext install xdebug \
