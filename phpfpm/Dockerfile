@@ -11,6 +11,7 @@ RUN apt-get -qqy update \
                          libssl-dev \
                          libbz2-dev \
                          libreadline-dev \
+                         libfreetype6-dev \
                          bzip2 \
   # Idiopathic rm failure; loop is workaround
  && until rm -rf /var/lib/apt/lists; do sleep 1; done \
@@ -41,15 +42,11 @@ RUN CXXFLAGS="-fPIC" $PHPBREW_HOME/bin/phpbrew install $MAGENTO_PHP_BREWED_VERSI
                                                 +iconv \
                                                 +fpm \
                                                 +soap \
-                                                +gd \
-                                                -- \
-                                                --with-gd=shared \
-                                                --enable-gd-natf \
-                                                --with-jpeg-dir=/usr/include \
-                                                --with-png-dir=/usr/include
-RUN bash $PHPBREW_HOME/bin/phpbrew_install_extensions
+ && bash $PHPBREW_HOME/bin/phpbrew_install_extensions \
+ && $PHPBREW_HOME/bin/phpbrew clean php-$MAGENTO_PHP_BREWED_VERSION
 COPY php-fpm.conf $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/etc/php-fpm.conf
 COPY www-pool.conf $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/etc/pool.d/www-pool.conf
 COPY xdebug-enabler.ini $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/var/db/xdebugenabler.ini
-CMD ["$PHPBREW_HOME/bin/phpbrew_fpm_start"]
+COPY default-timezone.ini $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/var/db/default-timezone.ini
+CMD $PHPBREW_HOME/bin/phpbrew_fpm_start
 EXPOSE 9001
