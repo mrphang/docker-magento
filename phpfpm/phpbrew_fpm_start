@@ -1,5 +1,7 @@
 #!/bin/bash
 source ~/.phpbrew/bashrc
 
-phpbrew use $MAGENTO_PHP_BREWED_VERSION \
- && umask 0002 && exec /opt/phpbrew/php/php-$MAGENTO_PHP_BREWED_VERSION/sbin/php-fpm
+export PATH=$PATH:$PHPBREW_HOME/bin \
+    && phpbrew use $MAGENTO_PHP_BREWED_VERSION \
+    && umask 0002 
+    && exec /opt/phpbrew/php/php-$MAGENTO_PHP_BREWED_VERSION/sbin/php-fpm

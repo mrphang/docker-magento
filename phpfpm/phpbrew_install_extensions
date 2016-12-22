@@ -1,6 +1,6 @@
 #!/bin/bash
 source /opt/phpbrew/bashrc
 
-phpbrew use $MAGENTO_PHP_BREWED_VERSION \
- && phpbrew ext install xdebug \
- && phpbrew ext install gd
+export PATH=$PATH:$PHPBREW_HOME/bin \
+ && phpbrew use $MAGENTO_PHP_BREWED_VERSION \
+ && phpbrew ext install xdebug

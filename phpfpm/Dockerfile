@@ -1,6 +1,7 @@
 FROM php:5.6-cli
 MAINTAINER Michael A. Phang <mphangdev@gmail.com>
 ENV PHPBREW_HOME /opt/phpbrew
+ENV PHPBREW_ROOT /opt/phpbrew
 RUN apt-get -qqy update \
  && apt-get -qqy install git \
                          libcurl4-gnutls-dev \
@@ -18,17 +19,18 @@ RUN apt-get -qqy update \
  && mkdir -p $PHPBREW_HOME/bin \
  && curl -L -O https://github.com/phpbrew/phpbrew/raw/1.22.5/phpbrew \
  && mv phpbrew $PHPBREW_HOME/bin \
- && chmod -R +rx $PHPBREW_HOME \
- && phpbrew init \
- && phpbrew update --old \
+ && chmod -R +rx $PHPBREW_HOME
+RUN export PATH=$PATH:$PHPBREW_HOME/bin \
+ && $PHPBREW_HOME/bin/phpbrew init \
+ && $PHPBREW_HOME/bin/phpbrew update --old \
  && echo "[ -f \"$PHPBREW_HOME/bashrc\" ] && source $PHPBREW_HOME/bashrc" >> ~/.bashrc
 # build php
-ENV MAGENTO_PHP_BREWED_VERSION "5.4.43"
+ENV MAGENTO_PHP_BREWED_VERSION "5.5.38"
 COPY phpbrew_fpm_start /usr/local/bin/
 COPY php-fpm.conf $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/etc/php-fpm.conf
 COPY www-pool.conf $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/etc/pool.d/www-pool.conf
 RUN chmod +x /usr/local/bin/phpbrew_fpm_start \
- && phpbrew install $MAGENTO_PHP_BREWED_VERSION +default \
+ && CXXFLAGS="-fPIC" $PHPBREW_HOME/bin/phpbrew install $MAGENTO_PHP_BREWED_VERSION +default \
                                                 +bcmath \
                                                 +curl \
                                                 +mcrypt \
@@ -36,8 +38,12 @@ RUN chmod +x /usr/local/bin/phpbrew_fpm_start \
                                                 +iconv \
                                                 +fpm \
                                                 +soap \
+                                                +gd \
                                                 -- \
-                                                --with-jpeg-dir=/usr
+                                                --with-gd=shared \ 
+                                                --enable-gd-natf \ 
+                                                --with-jpeg-dir=/usr \ 
+                                                --with-png-dir=/usr
 COPY phpbrew_install_extensions /usr/local/bin/
 RUN useradd mage \
  && usermod -aG www-data mage \
