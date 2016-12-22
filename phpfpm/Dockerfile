@@ -33,7 +33,8 @@ RUN curl -L -O https://github.com/phpbrew/phpbrew/raw/1.22.5/phpbrew \
  && echo "[ -f \"$PHPBREW_HOME/phpbrew_env\" ] && source $PHPBREW_HOME/phpbrew_env" >> ~/.bashrc
 # build php
 ENV MAGENTO_PHP_BREWED_VERSION "5.5.38"
-RUN CXXFLAGS="-fPIC" $PHPBREW_HOME/bin/phpbrew install $MAGENTO_PHP_BREWED_VERSION \
+RUN $PHPBREW_HOME/bin/phpbrew download $MAGENTO_PHP_BREWED_VERSION
+RUN CFLAGS="-fPIC" $PHPBREW_HOME/bin/phpbrew install $MAGENTO_PHP_BREWED_VERSION \
                                                 +default \
                                                 +bcmath \
                                                 +curl \
