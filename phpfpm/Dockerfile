@@ -50,6 +50,6 @@ RUN CXXFLAGS="-fPIC" $PHPBREW_HOME/bin/phpbrew install $MAGENTO_PHP_BREWED_VERSI
 RUN bash $PHPBREW_HOME/bin/phpbrew_install_extensions
 COPY php-fpm.conf $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/etc/php-fpm.conf
 COPY www-pool.conf $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/etc/pool.d/www-pool.conf
-COPY xdebug-enabler.ini /root/.phpbrew/php/php-$MAGENTO_PHP_BREWED_VERSION/var/db/xdebugenabler.ini
+COPY xdebug-enabler.ini $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/var/db/xdebugenabler.ini
 CMD ["$PHPBREW_HOME/bin/phpbrew_fpm_start"]
 EXPOSE 9001
