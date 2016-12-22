@@ -1,7 +1,5 @@
 FROM php:5.6-cli
 MAINTAINER Michael A. Phang <mphangdev@gmail.com>
-ENV PHPBREW_HOME /opt/phpbrew
-ENV PHPBREW_ROOT /opt/phpbrew
 RUN apt-get -qqy update \
  && apt-get -qqy install git \
                          libcurl4-gnutls-dev \
@@ -16,21 +14,26 @@ RUN apt-get -qqy update \
                          bzip2 \
   # Idiopathic rm failure; loop is workaround
  && until rm -rf /var/lib/apt/lists; do sleep 1; done \
- && mkdir -p $PHPBREW_HOME/bin \
- && curl -L -O https://github.com/phpbrew/phpbrew/raw/1.22.5/phpbrew \
- && mv phpbrew $PHPBREW_HOME/bin \
- && chmod -R +rx $PHPBREW_HOME
-RUN export PATH=$PATH:$PHPBREW_HOME/bin \
- && $PHPBREW_HOME/bin/phpbrew init \
- && $PHPBREW_HOME/bin/phpbrew update --old \
- && echo "[ -f \"$PHPBREW_HOME/bashrc\" ] && source $PHPBREW_HOME/bashrc" >> ~/.bashrc
+ && useradd mage \
+ && usermod -aG www-data mage
+# setup phpbrew
+ENV PHPBREW_HOME /opt/phpbrew
+ENV PHPBREW_ROOT /opt/phpbrew
+COPY phpbrew_install_extensions $PHPBREW_HOME/bin/phpbrew_install_extensions
+COPY phpbrew_fpm_start $PHPBREW_HOME/bin/phpbrew_fpm_start
+COPY phpbrew_build_env $PHPBREW_HOME/bin/phpbrew_build_env
+RUN curl -L -O https://github.com/phpbrew/phpbrew/raw/1.22.5/phpbrew \
+ && mv phpbrew $PHPBREW_HOME/bin/phpbrew \
+ && chmod -R +rx $PHPBREW_HOME/bin \
+ && export PATH=$PATH:$PHPBREW_HOME/bin \
+ && phpbrew init \
+ && phpbrew update --old \
+ && bash $PHPBREW_HOME/bin/phpbrew_build_env \
+ && echo "[ -f \"$PHPBREW_HOME/phpbrew_env\" ] && source $PHPBREW_HOME/phpbrew_env" >> ~/.bashrc
 # build php
 ENV MAGENTO_PHP_BREWED_VERSION "5.5.38"
-COPY phpbrew_fpm_start /usr/local/bin/
-COPY php-fpm.conf $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/etc/php-fpm.conf
-COPY www-pool.conf $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/etc/pool.d/www-pool.conf
-RUN chmod +x /usr/local/bin/phpbrew_fpm_start \
- && CXXFLAGS="-fPIC" $PHPBREW_HOME/bin/phpbrew install $MAGENTO_PHP_BREWED_VERSION +default \
+RUN CXXFLAGS="-fPIC" $PHPBREW_HOME/bin/phpbrew install $MAGENTO_PHP_BREWED_VERSION \
+                                                +default \
                                                 +bcmath \
                                                 +curl \
                                                 +mcrypt \
@@ -40,15 +43,13 @@ RUN chmod +x /usr/local/bin/phpbrew_fpm_start \
                                                 +soap \
                                                 +gd \
                                                 -- \
-                                                --with-gd=shared \ 
-                                                --enable-gd-natf \ 
-                                                --with-jpeg-dir=/usr \ 
-                                                --with-png-dir=/usr
-COPY phpbrew_install_extensions /usr/local/bin/
-RUN useradd mage \
- && usermod -aG www-data mage \
- && chmod +x /usr/local/bin/phpbrew_install_extensions \
- && bash phpbrew_install_extensions
+                                                --with-gd=shared \
+                                                --enable-gd-natf \
+                                                --with-jpeg-dir=/usr/include \
+                                                --with-png-dir=/usr/include
+RUN bash $PHPBREW_HOME/bin/phpbrew_install_extensions
+COPY php-fpm.conf $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/etc/php-fpm.conf
+COPY www-pool.conf $PHPBREW_HOME/php/php-$MAGENTO_PHP_BREWED_VERSION/etc/pool.d/www-pool.conf
 COPY xdebug-enabler.ini /root/.phpbrew/php/php-$MAGENTO_PHP_BREWED_VERSION/var/db/xdebugenabler.ini
-CMD ["/usr/local/bin/phpbrew_fpm_start"]
+CMD ["$PHPBREW_HOME/bin/phpbrew_fpm_start"]
 EXPOSE 9001
