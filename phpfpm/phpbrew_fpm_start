@@ -1,5 +1,5 @@
 #!/bin/bash
-source $PHPBREW_HOME/phpbrew_env
+source $PHPBREW_HOME/env
 
 phpbrew use $MAGENTO_PHP_BREWED_VERSION \
     && umask 0002 \
