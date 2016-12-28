@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cat > $PHPBREW_HOME/phpbrew_env <<ENV_SCRIPT
+cat > $PHPBREW_HOME/env <<ENV_SCRIPT
 export PHPBREW_ROOT=$PHPBREW_HOME
 export PHPBREW_HOME=$PHPBREW_HOME
 source $PHPBREW_HOME/bashrc 
