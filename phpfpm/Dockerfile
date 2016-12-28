@@ -5,7 +5,7 @@ RUN apt-get -qqy update \
                          libcurl4-gnutls-dev \
                          libmcrypt-dev \
                          libpng12-dev \
-                         libjpeg62-turbo-dev \
+                         libjpeg-dev \
                          libxml2-dev \
                          libxslt-dev \
                          libssl-dev \
