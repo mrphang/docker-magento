@@ -29,8 +29,7 @@ RUN curl -L -O https://github.com/phpbrew/phpbrew/raw/1.22.5/phpbrew \
  && export PATH=$PATH:$PHPBREW_HOME/bin \
  && phpbrew init \
  && phpbrew update --old \
- && bash $PHPBREW_HOME/bin/phpbrew_build_env \
- && echo "[ -f \"$PHPBREW_HOME/phpbrew_env\" ] && source $PHPBREW_HOME/phpbrew_env" >> ~/.bashrc
+ && bash $PHPBREW_HOME/bin/phpbrew_build_env
 # build php
 ENV MAGENTO_PHP_BREWED_VERSION "5.5.38"
 RUN $PHPBREW_HOME/bin/phpbrew download $MAGENTO_PHP_BREWED_VERSION
