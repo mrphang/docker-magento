@@ -1,5 +1,5 @@
 FROM php:5.6-cli
-MAINTAINER Michael A. Smith <msmith3@ebay.com>
+MAINTAINER Michael A. Phang <mphangdev@gmail.com>
 COPY install /usr/local/bin/install_magento
 RUN apt-get -qqy update \
  && apt-get -qqy install git \
@@ -13,19 +13,8 @@ RUN apt-get -qqy update \
                          mysql-client \
                          vim \
                          xz-utils \
- && pecl install -o -f xdebug \
- && docker-php-ext-install bcmath \
-                           gd \
-                           mcrypt \
-                           opcache \
-                           pcntl \
-                           pdo_mysql \
-                           soap \
-                           xsl \
-                           zip \
   # Idiopathic rm failure; loop is workaround
  && until rm -rf /tmp/pear /var/lib/apt/lists; do sleep 1; done
-
 ##
 # Install useful developer tools
 # including bootstrap installing Composer
@@ -44,5 +33,4 @@ RUN curl -OSs https://getcomposer.org/composer.phar \
                       --optimize-autoloader \
                       --prefer-dist \
  && rm composer.phar
-
-WORKDIR /srv/magento
+COPY phpbrew_profile.sh /etc/profile.d/phpbrew_profile.sh
